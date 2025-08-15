@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Encryption App</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+    textarea, input { width: 100%; margin-top: 10px; padding: 8px; }
+    button { margin-top: 10px; padding: 10px; width: 100%; cursor: pointer; }
+    h2 { margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h2>Encrypt Text</h2>
+  <textarea id="plainText" placeholder="Enter text to encrypt"></textarea>
+  <button onclick="encryptText()">Encrypt</button>
+  <textarea id="encryptedText" placeholder="Encrypted text will appear here"></textarea>
+
+  <h2>Decrypt Text</h2>
+  <textarea id="cipherInput" placeholder="Enter encrypted text"></textarea>
+  <button onclick="decryptText()">Decrypt</button>
+  <textarea id="decryptedText" placeholder="Decrypted text will appear here"></textarea>
+
+  <script>
+    async function encryptText() {
+      let text = document.getElementById('plainText').value;
+      let res = await fetch('/encrypt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      let data = await res.json();
+      document.getElementById('encryptedText').value = data.encrypted;
+    }
+
+    async function decryptText() {
+      let text = document.getElementById('cipherInput').value;
+      let res = await fetch('/decrypt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      let data = await res.json();
+      document.getElementById('decryptedText').value = data.decrypted || data.error;
+    }
+  </script>
+</body>
+</html>
